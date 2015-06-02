@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript" src="swfobject//swfobject.js"></script>
+        <script type="text/javascript" src="src//jquery-1.3.2.js"></script>
+        <script type="text/javascript" src="src//jsocket.js"></script>
+        <script type="text/javascript" src="src//jsocket.advanced.js"></script>
+        <script type="text/javascript" src="src//WebSocket-wrapper.js"></script>
+        <link type="text/css" href="css//style.css" rel="stylesheet">
+        
+        <title>Bizuca Cliente</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+    </head>
+    <body background = "img//intro.png" >
+    <center>
+        <h1> Web Bizuca - Connection</h1>
+        <div>
+            <p> IP Adress: <input type="text" id ="Tip" size="10"/>
+            Port: <input type="text" id ="Tport" size="5"/></p>
+        </div>
+        <form name="conec">  
+            <p> Connected to: <input type="text" name="Tipconf" size="20" readonly></p>
+        </form>
+        <button type="button" onclick="SetConectar();" >Connect</button>
+        <button type="button" onclick="Desconectar();" >Disconnect</button>
+        
+        <fieldset id="field">
+            <textarea id="chat" rows="10" cols="40"></textarea>
+            <input type="text" id="chatin">
+            <button type="button" onclick="enviarChat();" >Send</button>
+        </fieldset>
+        <br><br>
+        <div id="log">[Log]: (Default Port : 80)</div>
+        <div id="messages"></div>
+        <br>
+        <form action="">
+            Username: <input type="text" id="user"><br>
+            Password: <input type="password" id="password">
+        </form>
+        <br>
+        <button type="button" onclick="selectNick();" >Choose Nick</button>
+        <div id="my_socket"></div>
+
+        <script type="text/javascript" src="js//connection.js"> </script>
+        <script type="text/javascript" src="js//animation.js"> </script>
+    </center>
+    </body>
+</html>
