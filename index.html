@@ -12,38 +12,47 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
     </head>
-    <body background = "img//intro.png" >
-    <center>
-        <h1> Web Bizuca - Connection</h1>
-        <div>
-            <p> IP Adress: <input type="text" id ="Tip" size="10"/>
-            Port: <input type="text" id ="Tport" size="5"/></p>
+    <body background = "img//intro.png" onmousemove ="move(event);" onclick="mousec(event);"
+        onkeydown="press(event);" onkeyup="release(event);">
+        <div id="game">
+            <canvas id="myCanvas"> </canvas>
         </div>
-        <form name="conec">  
-            <p> Connected to: <input type="text" name="Tipconf" size="20" readonly></p>
-        </form>
-        <button type="button" onclick="SetConectar();" >Connect</button>
-        <button type="button" onclick="Desconectar();" >Disconnect</button>
-        
-        <fieldset id="field">
+    <center>
+        <fieldset id="chatBox">
             <textarea id="chat" rows="10" cols="40"></textarea>
             <input type="text" id="chatin">
             <button type="button" onclick="enviarChat();" >Send</button>
         </fieldset>
-        <br><br>
-        <div id="log">[Log]: (Default Port : 80)</div>
-        <div id="messages"></div>
-        <br>
-        <form action="">
-            Username: <input type="text" id="user"><br>
-            Password: <input type="password" id="password">
-        </form>
-        <br>
-        <button type="button" onclick="selectNick();" >Choose Nick</button>
-        <div id="my_socket"></div>
+        
+        <div id="menu">
+            <h1> Web Bizuca - Connection</h1>
+            <div>
+                <p> IP Adress: <input type="text" id ="Tip" size="10"/>
+                Port: <input type="text" id ="Tport" size="5"/></p>
+            </div>
+            <form id="netPanel">  
+                <p> Connected to: <input type="text" name="Tipconf" size="20" readonly></p>
+            </form>
+            <button type="button" onclick="SetConectar();" >Connect</button>
+            <button type="button" onclick="Desconectar();" >Disconnect</button>
 
-        <script type="text/javascript" src="js//connection.js"> </script>
-        <script type="text/javascript" src="js//animation.js"> </script>
+            <br><br>
+            <div id="log">[Log]: (Default Port : 80)</div>
+            <div id="messages"></div>
+            <br>
+            <form action="">
+                Username: <input type="text" id="user"><br>
+                Password: <input type="password" id="password">
+            </form>
+            <br>
+            <button type="button" onclick="selectNick();" >Choose Nick</button>
+            <div id="my_socket"></div>
+
+            <script type="text/javascript" src="js//input.js"> </script>
+            <script type="text/javascript" src="js//game.js"> </script>
+            <script type="text/javascript" src="js//connection.js"> </script>
+            <script type="text/javascript" src="js//animation.js"> </script>
+        </div>
     </center>
     </body>
 </html>

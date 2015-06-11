@@ -8,13 +8,17 @@ mySocket.setup("my_socket", "flash//jsocket.swf");
 
 var connected = "<font color=\"#00FF00\"> Connected! </font>";
 
-var ip, port, nick, pass, message, defPort = 80, Estado = 0;
+var ip, port, nick, pass, message, defPort = 81, Estado = 0;
 var chatin = document.getElementById("chatin");
-var field = document.getElementById("field");
+var chatBox = document.getElementById("chatBox");
+var netPanel = document.getElementById("netPanel");
+var game = document.getElementById("game");
+var menu = document.getElementById("menu");
 var chat = document.getElementById("chat");
 var log = document.getElementById("log");
 
-field.style.visibility = 'hidden';
+chatBox.style.visibility = 'hidden';
+game.style.visibility = 'hidden';
 
 function ready()
 {
@@ -25,27 +29,58 @@ function connect(success, data)
     console.log("socket connected");
     if (!success)
     {
-        console.log("error:" + data)
+        console.log("error:" + data);
         return;
     }
 }
 function data(content)
 {
-    console.log("socket data");
-    console.log(content+" "+Estado);
+    if (content !== "")
+    {
+        console.log("socket data"+" "+content+" "+Estado);
+    }
+    // Modo de Conexão
     if (Estado === 0)
     {
         Estado++;
         port = content;
         Reconectar();
-        conec.Tipconf.value = ip.concat(" : ",port);
+        netPanel.Tipconf.value = ip.concat(" : ",port);
         log.innerHTML = connected;
     }
+    // Modo de Login
     else if (Estado === 1) {
         writeResponse(content);
     }
+    // Modo de Chat
     else if (Estado === 2) {
-        if (content !== "") {
+        if (content.indexOf("@Start")!== -1){
+            chat.value += "[Admin] > Starting the Game!";
+            Estado++;
+        }
+        else if (content !== "") {
+            chat.value += content; 
+        }
+    }
+    // Inicialização do Jogo
+    else if (Estado === 3)
+    {
+        if (content.indexOf("@")!== -1)
+        {
+            menu.style.visibility = 'hidden';
+            game.style.visibility = 'visible';
+            chatBox.style.visibility = 'hidden';
+            window.startGame(port, content);
+            Estado++;
+        }
+    }
+    // Jogo
+    else if (Estado === 4)
+    {
+        if (content.indexOf("@")!== -1) {
+            window.interpretMsg(content);
+        }
+        else if (content !== ""){
             chat.value += content; 
         }
     }
@@ -110,7 +145,7 @@ function selectNick()
 }
 function ligarChat(){
     message = "Seja bem vindo ";
-    field.style.visibility = 'visible';
+    chatBox.style.visibility = 'visible';
     chat.value = message.concat(nick,"\n");
 }
 function enviarChat(){
@@ -121,3 +156,7 @@ function enviarChat(){
     chatin.value = "";
 }
 
+window.sendMap = function(msg) {
+    console.log("Message sent"+msg);
+    Commit(msg);
+};

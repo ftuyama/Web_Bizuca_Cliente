@@ -1,8 +1,9 @@
-html{
-    position: absolute;
-    top: 10%;
-    left: 32%;
-}
+/************************************************************************/
+/*                           Web Bizuca                                 */
+/************************************************************************/
+/*                     CSS para o arquivo .html                         */
+/************************************************************************/
+
 body {
     font-family: Courier, Arial, sans-serif;
     font-size: 12;
@@ -10,11 +11,20 @@ body {
     color: #555;
     text-shadow: 3px 1px 1px #78A3A6;
 }
-
-fieldset{
+#game{
     position: absolute;
-    top: 30%;
-    left: 100%;
+    top: 0%; 
+    left: 0%;
+}
+#chatBox{
+    position: absolute;
+    bottom: 40%;
+    left: 75%;
+}
+#menu{
+    position: absolute;
+    top: 20%;
+    left: 37%;
 }
 textarea{
     border: 2px solid #765942;
