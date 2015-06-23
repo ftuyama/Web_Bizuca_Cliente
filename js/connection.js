@@ -12,6 +12,7 @@ var ip, port, nick, pass, message, defPort = 81, Estado = 0;
 var chatin = document.getElementById("chatin");
 var chatBox = document.getElementById("chatBox");
 var netPanel = document.getElementById("netPanel");
+var musicPlayer = document.getElementById("musicPlayer");
 var game = document.getElementById("game");
 var menu = document.getElementById("menu");
 var chat = document.getElementById("chat");
@@ -70,18 +71,23 @@ function data(content)
             menu.style.visibility = 'hidden';
             game.style.visibility = 'visible';
             chatBox.style.visibility = 'hidden';
+            musicPlayer.style.visibility = 'hidden';
             window.startGame(port, content);
+            window.playSong("musica");
             Estado++;
         }
     }
     // Jogo
     else if (Estado === 4)
     {
-        if (content.indexOf("@")!== -1) {
-            window.interpretMsg(content);
+        if (content.indexOf("@ShutDown1")!== -1) {
+            window.victory();
         }
-        else if (content !== ""){
-            chat.value += content; 
+        else if (content.indexOf("@ShutDown0") !== -1) {
+            window.gameOver();
+        }
+        else if (content.indexOf("@")!== -1) {
+            window.interpretMsg(content);
         }
     }
 }

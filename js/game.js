@@ -11,18 +11,21 @@ var bot = new Image();   bot.src = "img//bot.png";
 var bala = new Image(); bala.src = "img//bala.png";
 var tiro = new Image();  tiro.src = "img//tiro.png";
 var fundo = new Image();  fundo.src = "img//fundo.png";
+var placar = new Image();  placar.src = "img//placar.png";
 var player = new Image(); player.src = "img//player.png";
 var fase = new Image();  fase.src = "img//fasedesign.png";
-var littlebox = new Image();  littlebox.src = "img//status.png";
+var vision = new Image();   vision.src = "img//vision.png";
 var vitoria = new Image();   vitoria.src = "img//vitoria.png";
+var littlebox = new Image();  littlebox.src = "img//status.png";
 var gameover = new Image();   gameover.src = "img//gameover.png";
+var explosion = new Image(); explosion.src = "img//explosion.png";
 
 var mouse = {
     x: 0, y: 0, c: 0
 };
-var alive = true;
+var alive = true, found = false;
 var N, Nplayers, Nbots, Ntiros;
-var Players = [], Bots = [], Tiros = [];
+var Players = [], Bots = [], Last = [], Tiros = [];
 var id = 0, x = 0, y = 0, hp = 0, ang = 0;
 var Mid = 0, Mx = 0, My = 0, Mhp = 0, Mang = 0, Mbalas = 0;
 var i, keyboard;
@@ -46,6 +49,24 @@ window.interpretMsg = function(content)
     processInput();
     window.requestAnimationFrame(draw);
     sendInfo();
+};
+
+window.gameOver = function()
+{
+    document.body.style.backgroundImage = "url('img//menu.png')";
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.clearRect(0,0,screen.width,screen.height); 
+    ctx.drawImage(gameover, 0, 0);
+    window.playSong("gameover");
+};
+
+window.victory = function()
+{
+    document.body.style.backgroundImage = "url('img//menu.png')";
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.clearRect(0,0,screen.width,screen.height);
+    ctx.drawImage(vitoria, 0, 0);
+    window.playSong("vitoria");
 };
 
 function isAlive(){
@@ -78,17 +99,11 @@ function resize()
     };
 }
 
-function sleep(milliseconds) {
-    var start = new Date().getTime();
-    for (var i = 0; i < 1e7; i++)
-        if ((new Date().getTime() - start) > milliseconds)
-            break;
-}
-
 function destroy ()
 {
     Players = [];
     Bots = [];
+    Last = Tiros.slice();
     Tiros = [];
 }
 
@@ -126,8 +141,8 @@ function interpret(content)
             else if (SubInfo === 3) y = info;
             else if (SubInfo === 4) hp = info;
             else if (SubInfo === 5) ang = info;
-            
-            // Após ler todas de um objeto, atribuit
+              
+            // Após ler todas de um objeto, atribui
             if (SubInfo === 5) 
             {
                 // Ver o tipo de objeto
@@ -146,16 +161,20 @@ function interpret(content)
                 // Iterar
                 SubInfo = 1;
                 SInfo++;
-                if (SInfo > N) {
+                while (SInfo > N) 
+                {
                     SInfo = 1;
                     SuperInfo++;
+                    if (SuperInfo === 1)      { N = Nplayers; }
+                    else if (SuperInfo === 2) { N = Nbots;    }
+                    else if (SuperInfo === 3) { N = Ntiros;   }
+                    else break;
                 }     
             }
-            else SubInfo++;  
+            else SubInfo++;
         }
     }
 }
-var g = 200;
 function draw() 
 {
     if (alive)
@@ -165,40 +184,110 @@ function draw()
         ctx.globalCompositeOperation = 'destination-over';
         ctx.clearRect(0,0,screen.width,screen.height); 
         
-        ctx.drawImage(player, g++, 200);
+        // --------------------------------------
+        //      Desenho do placar do Jogo
+        // --------------------------------------
+        ctx.save();
+        ctx.translate(screen.width/2-100, 0);
+        ctx.font = "24px Arial";
+        ctx.fillStyle = "#0000FF";
+        ctx.fillText("" + Players.length, 60, 110);
+        ctx.fillStyle = "#B22222";
+        ctx.fillText("" + Bots.length, 220, 110);
+        ctx.drawImage(placar, 0, 0);
+        ctx.restore();
+        
+        // --------------------------------------
+        //      Desenho do Status do jogador
+        // --------------------------------------
         
         for (var i = 0; i < Players.length; i++)
         {
+            if (Players[i]['id'] - Mid === 0)
+            {
+                ctx.save();
+                nX = parseInt(AbsX)+parseInt(Players[i]['x']);
+                nY = parseInt(AbsY)+parseInt(Players[i]['y']);
+                ctx.translate(nX - 30, nY - 80);
+
+                ctx.font = "13px Arial";
+                ctx.fillStyle = "#FF0000";
+                ctx.fillRect(22, 18, 1 + Players[i]['hp'] / 3, 6);
+                ctx.fillStyle = "#000000";
+                ctx.fillText("" + Mbalas, 70, 25);
+                ctx.fillStyle = "#000000";
+                ctx.fillText("Nº " + Players[i]['id'], 25, 15);
+                ctx.drawImage(littlebox, 0, 0);
+                ctx.restore();
+            }
+        }
+        
+        // --------------------------------------
+        //      Desenho do Campo de visão
+        // --------------------------------------
+        
+        nX = parseInt(AbsX)+parseInt(Mx);
+        nY = parseInt(AbsY)+parseInt(My);
+            
+        ctx.save();
+        ctx.translate(nX, nY);
+        ctx.rotate((Math.PI/180.0)*Mang);
+        ctx.drawImage(vision, -vision.width/2, -vision.height/2);
+        ctx.restore();
+        
+        // --------------------------------------
+        //       Desenho dos Jogadores 
+        // --------------------------------------
+        for (var i = 0; i < Players.length; i++)
+        {
+            
             nX = parseInt(AbsX)+parseInt(Players[i]['x']);
             nY = parseInt(AbsY)+parseInt(Players[i]['y']);
             
             ctx.save();
             ctx.translate(nX, nY);
-            
             ctx.rotate((Math.PI/180.0)*Players[i]['ang']);
             ctx.drawImage(player, -player.width/2, -player.height/2);
-            
             ctx.restore();
             
-            ctx.save();
-            ctx.translate(nX - 30, nY - 80);
-
-            ctx.font = "13px Arial";
-            if (Players[i]['id'] - Mid === 0)
+            if (Players[i]['id'] - Mid !== 0)
             {
-                ctx.fillStyle = "#FF0000";
-                ctx.fillRect(22, 18, 1+Players[i]['hp'] /3, 6);
+                ctx.save();
+                ctx.translate(nX - 30, nY - 80);
+                ctx.font = "13px Arial";
                 ctx.fillStyle = "#000000";
-                ctx.fillText("" + Mbalas, 70, 25);
+                ctx.fillText("Nº " + Players[i]['id'], 25, 15);
+
+                ctx.drawImage(littlebox, 0, 0);
+                ctx.restore();
             }
             
-            ctx.fillStyle = "#000000";
-            ctx.fillText("Nº " + Players[i]['id'], 25, 15);
-            
-            ctx.drawImage(littlebox, 0, 0);
-            ctx.restore();
-            
         }
+        // --------------------------------------
+        //       Desenho das explosões
+        // --------------------------------------
+        for (var i = 0; i < Last.length; i++)
+        {
+            found = false;
+            for (var k = 0; k < Tiros.length; k++) {
+                if (parseInt(Tiros[k]['id']) - parseInt(Last[i]['id']) === 0) {
+                    found = true;
+                }
+            }
+            if (found === false)
+            {
+                ctx.save();
+                nX = parseInt(AbsX) + parseInt(Last[i]['x']);
+                nY = parseInt(AbsY) + parseInt(Last[i]['y']);
+                ctx.translate(nX, nY);
+                ctx.rotate((Math.PI/180.0)*Last[i]['ang']);
+                ctx.drawImage(explosion, -explosion.width/2, -explosion.height/2);
+                ctx.restore();
+            }
+        }
+        // --------------------------------------
+        //          Desenho dos Bots
+        // --------------------------------------
         for (var i = 0; i < Bots.length; i++)
         {
             ctx.save();
@@ -209,6 +298,9 @@ function draw()
             ctx.drawImage(bot, 0, 0);
             ctx.restore();
         }
+        // --------------------------------------
+        //         Desenho dos Tiros
+        // --------------------------------------
         for (var i = 0; i < Tiros.length; i++)
         {
             ctx.save();
@@ -216,13 +308,16 @@ function draw()
             nY = parseInt(AbsY)+parseInt(Tiros[i]['y']);
             ctx.translate(nX, nY);
             ctx.rotate((Math.PI/180.0)*Tiros[i]['ang']);
-            ctx.drawImage(tiro, 0, 0);
+            ctx.drawImage(tiro, -tiro.width/2, -tiro.height/2);
             ctx.restore();
         }
+        
+        // --------------------------------------
+        //        Desenho da fase
+        // --------------------------------------
         ctx.drawImage(fase,AbsX,AbsY);
      
     }
-    else ctx.drawImage(gameover, 0, 0);
 }
 
 function sendInfo()
