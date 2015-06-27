@@ -6,7 +6,7 @@
 var diretorio = "music//";
 var musicPlayer = document.getElementById("musicPlayer");
 var playerSource = document.getElementById("player-source");
-
+  
 window.playSong = function(music) 
 {
     playerSource.setAttribute("src", diretorio + music + ".mp3");

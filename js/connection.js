@@ -8,7 +8,7 @@ mySocket.setup("my_socket", "flash//jsocket.swf");
 
 var connected = "<font color=\"#00FF00\"> Connected! </font>";
 
-var ip, port, nick, pass, message, defPort = 81, Estado = 0;
+var ip, port, nick, pass, message, defPort = 4000, Estado = 0;
 var chatin = document.getElementById("chatin");
 var chatBox = document.getElementById("chatBox");
 var netPanel = document.getElementById("netPanel");
@@ -23,23 +23,19 @@ game.style.visibility = 'hidden';
 
 function ready()
 {
-    console.log("socket ready");
+    log.innerHTML = "socket ready";
 }
 function connect(success, data)
 {
-    console.log("socket connected");
+    log.innerHTML = "socket connected";
     if (!success)
     {
-        console.log("error:" + data);
+        log.innerHTML = "error:" + data;
         return;
     }
 }
 function data(content)
 {
-    if (content !== "")
-    {
-        console.log("socket data"+" "+content+" "+Estado);
-    }
     // Modo de Conexão
     if (Estado === 0)
     {
@@ -93,7 +89,7 @@ function data(content)
 }
 function close()
 {
-    console.log("socket close");
+    log.innerHTML = "socket close";
 }
 
 
@@ -107,14 +103,12 @@ function Desconectar()
 }
 function Reconectar()
 {
-    console.log("Reconnecting");
     mySocket.close();
     mySocket.connect(ip, port);
 }
 function Commit(message)
 {
-    mySocket.write(message);
-    Reconectar();
+    mySocket.write(message+"\n");
 }
 function writeResponse(text)
 {
@@ -128,7 +122,7 @@ function SetConectar()
         port = document.getElementById("Tport").value.toString();
         if (ip === "" && port === "")
         {
-            ip = '192.168.197.1';
+            ip = '192.168.0.240';
             port = defPort;
         }
         Conectar();
@@ -157,12 +151,10 @@ function ligarChat(){
 function enviarChat(){
     message = chatin.value;
     message = nick.concat(" > ", message);
-    console.log("Message sent"+message);
     Commit(message);
     chatin.value = "";
 }
 
 window.sendMap = function(msg) {
-    console.log("Message sent"+msg);
     Commit(msg);
 };

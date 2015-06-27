@@ -12,11 +12,12 @@ var KEY = {
     UP: 38,
     LEFT: 37,
     DOWN: 40,
+    ENTER: 13,
     Q: 81
 };
 
 var keyboard = '_';
-var click = 0;
+var initial = 0, click = 0;
 var mouse = {
     x: 0, y: 0, c: 0
 };
@@ -76,6 +77,14 @@ function press()
         case KEY.DOWN:
         case KEY.S:
             keyboard = 'S';
+            break;
+        
+        case KEY.ENTER:
+            if (initial === 0) {
+                document.getElementById("menu").style.top = "20%";
+                document.getElementById("intro").src = "img/intro.png";
+                initial = 1;
+            }
             break;
     }
 }

@@ -11,6 +11,11 @@ body {
     color: #555;
     text-shadow: 3px 1px 1px #78A3A6;
 }
+#intro{
+    position: absolute;
+    top: 0%; 
+    left: 0%;
+}
 #musicPlayer{
     position: absolute;
     bottom: 0%; 
@@ -28,7 +33,7 @@ body {
 }
 #menu{
     position: absolute;
-    top: 20%;
+    top: 200%;
     left: 37%;
 }
 textarea{

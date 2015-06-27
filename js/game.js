@@ -7,18 +7,20 @@ var chat = document.getElementById("chatBox");
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
 
-var bot = new Image();   bot.src = "img//bot.png";
+var bot1 = new Image();   bot1.src = "img//bot1.png";
+var bot2 = new Image();   bot2.src = "img//bot2.png";
 var bala = new Image(); bala.src = "img//bala.png";
 var tiro = new Image();  tiro.src = "img//tiro.png";
 var fundo = new Image();  fundo.src = "img//fundo.png";
 var placar = new Image();  placar.src = "img//placar.png";
-var player = new Image(); player.src = "img//player.png";
+var player = new Image(); player.src = "img/player.png";
 var fase = new Image();  fase.src = "img//fasedesign.png";
 var vision = new Image();   vision.src = "img//vision.png";
 var vitoria = new Image();   vitoria.src = "img//vitoria.png";
 var littlebox = new Image();  littlebox.src = "img//status.png";
 var gameover = new Image();   gameover.src = "img//gameover.png";
 var explosion = new Image(); explosion.src = "img//explosion.png";
+var bolafogo= new Image(); bolafogo.src = "img//bolafogo.png";
 
 var mouse = {
     x: 0, y: 0, c: 0
@@ -28,7 +30,7 @@ var N, Nplayers, Nbots, Ntiros;
 var Players = [], Bots = [], Last = [], Tiros = [];
 var id = 0, x = 0, y = 0, hp = 0, ang = 0;
 var Mid = 0, Mx = 0, My = 0, Mhp = 0, Mang = 0, Mbalas = 0;
-var i, keyboard;
+var i, keyboard, bot = 0;
 
 window.startGame = function(port, content) 
 {
@@ -42,7 +44,6 @@ window.startGame = function(port, content)
 
 window.interpretMsg = function(content)
 {
-    console.log("Loop");
     destroy();
     interpret(content);
     isAlive();
@@ -78,7 +79,6 @@ function isAlive(){
             index = i;
             alive = true;
         }
-        else console.log("dif: "+Players[i]['id'] - Mid);
     if (alive)
     {
         Mx = Players[index]['x'];
@@ -262,7 +262,7 @@ function draw()
                 ctx.restore();
             }
             
-        }
+        }   
         // --------------------------------------
         //       Desenho das explosões
         // --------------------------------------
@@ -295,7 +295,15 @@ function draw()
             nY = parseInt(AbsY)+parseInt(Bots[i]['y']);
             ctx.translate(nX, nY);
             ctx.rotate((Math.PI/180.0)*Bots[i]['ang']);
-            ctx.drawImage(bot, 0, 0);
+            if (bot++<7) {
+                ctx.drawImage(bot1, -bot1.width/2, -bot1.height/2);
+            }
+            else if (bot <14) {
+                ctx.drawImage(bot2, -bot2.width/2, -bot2.height/2);
+            }
+            else  {  
+                bot = 0;
+            }
             ctx.restore();
         }
         // --------------------------------------
@@ -308,7 +316,12 @@ function draw()
             nY = parseInt(AbsY)+parseInt(Tiros[i]['y']);
             ctx.translate(nX, nY);
             ctx.rotate((Math.PI/180.0)*Tiros[i]['ang']);
-            ctx.drawImage(tiro, -tiro.width/2, -tiro.height/2);
+            if (Tiros[i]['id']%2 === 0){
+                ctx.drawImage(tiro, -tiro.width/2, -tiro.height/2);
+            }
+            else {
+                ctx.drawImage(bolafogo, -bolafogo.width/2, -bolafogo.height/2);
+            }
             ctx.restore();
         }
         

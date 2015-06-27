@@ -12,9 +12,11 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
     </head>
-    <body background = "img//intro.png" onmousemove ="move(event);" onclick="mousec(event);"
+    <body background = "img/menu.png" onmousemove ="move(event);" onclick="mousec(event);"
         onkeydown="press(event);" onkeyup="release(event);">
         
+        <img id = "intro" src="img/capa.png" width="1362" height="712" alt="intro"/>
+
         <audio id="musicPlayer" preload autoplay controls>
             <source id="player-source" src="music//intro.mp3" type="audio/mpeg"/>        
         </audio>
@@ -41,7 +43,7 @@
             <button type="button" onclick="Desconectar();" >Disconnect</button>
 
             <br><br>
-            <div id="log">[Log]: (Default Port : 80)</div>
+            <div id="log">[Log]: (Default Port : 4000)</div>
             <div id="messages"></div>
             <br>
             <form action="">
